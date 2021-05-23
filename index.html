@@ -18,25 +18,25 @@
             height: 100%;
             background-color: #525252;
         }
-        
+
         p {
             margin: 0;
         }
-        
+
          ::-webkit-scrollbar {
             width: 10px;
         }
-        
+
          ::-webkit-scrollbar-thumb {
             background-color: #787680;
             border-radius: 1000px;
         }
-        
+
          ::-webkit-scrollbar-track {
             border-radius: 1000px;
             box-shadow: inset 0 0 5px #c0c0c0;
         }
-        
+
         .outer {
             position: relative;
             margin-left: auto;
@@ -49,7 +49,7 @@
             border-radius: 30px;
             background-color: #ffffff;
         }
-        
+
         .inner {
             position: relative;
             margin: 3%;
@@ -57,7 +57,7 @@
             height: 87%;
             overflow-y: auto;
         }
-        
+
         .post {
             position: relative;
             width: 94%;
@@ -69,26 +69,26 @@
             padding-bottom: 1%;
             background-color: #b8ffa9;
         }
-        
+
         .name {
             position: relative;
             width: 80%;
             font-size: 2vh;
         }
-        
+
         .body {
             position: relative;
             width: 80%;
             font-size: 2vh;
         }
-        
+
         .time {
             position: absolute;
             right: 3%;
             top: 5%;
             font-size: 1.5vh;
         }
-        
+
         .new {
             position: absolute;
             bottom: 0;
@@ -96,7 +96,7 @@
             height: 5%;
             width: 94%;
         }
-        
+
         #name {
             position: relative;
             height: 100%;
@@ -107,7 +107,7 @@
             border-radius: 1000px;
             border: solid 1px #b8b8b8;
         }
-        
+
         #message {
             position: relative;
             height: 100%;
@@ -118,7 +118,7 @@
             border-radius: 1000px;
             border: solid 1px #b8b8b8;
         }
-        
+
         #send {
             position: relative;
             height: 100%;
@@ -158,6 +158,16 @@
     <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
     <script>
+
+        function strlink(str) {
+            var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))
+            var regexp_makeLink = function(all, url, h, href) {
+            return '<a href="h' + href + '" target="_blank">' + url + '</a>';
+            }
+            var textWithLink = str.replace(regexp_url, regexp_makeLink);
+            return textWithLink;
+        }
+
         // データベースの参照を準備
         var firebaseRef = new Firebase(""); // ... 1
         var messagesRef = firebaseRef.child('keijiban'); // ... 2
@@ -172,9 +182,10 @@
             } else {
                 na = msg.name
             }
-            hyouji = "<div class='post'><p class='name'>" + na + "</p><p class='time'>" + msg.time + "</p><p class='body'>>" + msg.body + "</p></div>"
+            hyouji = "<div class='post'><p class='name'>" + na + "</p><p class='time'>" + msg.time + "</p><p class='body'>>" + strlink(msg.body) + "</p></div>"
             $("#posts").prepend(hyouji);
         });
+
 
         function sendmes() {
             // 新規メッセージを投稿
