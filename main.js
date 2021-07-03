@@ -50,16 +50,26 @@ var messagesRef = firebaseRef.child('keijiban');
 // 既存メッセージを表示
 messagesRef.on('child_added', function(snapshot) {
     var msg = snapshot.val();
-    var hyouji = "";
-    var na = "匿名";
-    if (msg.name == "") {
-        na = "匿名"
-    } else {
-        na = msg.name
+
+    var day = new Date(msg.time);
+    var now = new Date();
+    var termDay = Math.floor((now - day) / 86400000);
+
+    if(termDay <= 30){
+        var hyouji = "";
+        var na = "匿名";
+        if (msg.name == "") {
+            na = "匿名"
+        } else {
+            na = msg.name
+        }
+        hyouji = "<div class='post'><p class='name'>" + na + "</p><p class='time'>" + msg.time + "</p><p class='body'>>" + strlink(msg.body) + "</p></div>"
+        $("#posts").prepend(hyouji);
+        setcss();
+    }else{
+        messagesRef.child(snapshot.key()).remove();
+        console.log("deleted");
     }
-    hyouji = "<div class='post'><p class='name'>" + na + "</p><p class='time'>" + msg.time + "</p><p class='body'>>" + strlink(msg.body) + "</p></div>"
-    $("#posts").prepend(hyouji);
-    setcss();
 });
 
 function sendmes() {
